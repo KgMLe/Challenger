@@ -1,16 +1,19 @@
-class Person {
-    #firstName = ""; // hashtag makes the property private
-    constructor (firstName) {
-        this.#firstName = firstName
-    }
-    walk (){
-        console.log(`${this.#firstName}`);;
-    }
-    dancing (){
-        console.log("I am dancimg");
-    }
-     
-}
-
-const person1 = new Person("Kgodisho")
-person1.walk()
+const {express, routes}= require ('./controller')
+const path =require('path')
+const app = express()
+const port = +process.eventNames.PORT||3000
+// Static
+app.use(express.static('./static'))
+app.use(
+    express.urlencoded({
+        extended:false
+    }),
+    routes
+)
+routes.get('^/$|/challenger', (req, res)=>{
+    res.sendFile(path.resolve(__dirname,
+        "../static/html/index.html"))
+})
+app.listen(port,()=>{
+    console.log(`The server is running on port ${port}`);
+}) 
