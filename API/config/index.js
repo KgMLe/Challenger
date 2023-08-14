@@ -12,3 +12,5 @@ const connection = createPool({
 module.exports = {
     connection
 }
+
+// create connection, in the config file

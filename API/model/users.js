@@ -1,5 +1,7 @@
 const db = require ("../config") 
+const {hash, compare, hashSync} = require ('bcrypt') // allows us to encrypt the password, compare allows us to check the passwords 
 // This will have all the functionality
+const {createToken} = require ('../middleware/AuthenticateUser')
 class Users {
     fetchUsers(req, res){
         const query =`
@@ -10,7 +12,7 @@ class Users {
              (err, results)=>{
                 if(err) throw err
                 res.json ({
-                    status: res,statusCode,
+                    status: res.statusCode, // collects the status code from the server
                     results
                 })
              } )
@@ -23,7 +25,7 @@ class Users {
         WHERE userID = ?;`
         // th is another way to do it ${req.params.id}
 
-        db.query(query, 
+        db.query(query, [req.params.id],
             (err, result)=>{
                 if(err) throw err
                 res.json ({
@@ -36,9 +38,36 @@ class Users {
         const query = `
         `
     }
-    register(req, res){
-        const query = `
-        `
+    
+    async register(req, res){ // hash is an async because it returns a promise
+        const data  = req.body // pipeline from the users data, we are getting users data
+    // encrypt password
+    data.userPass = await hash(data.userPass, 15)
+    //payload: Data coming from the user
+    const user = {
+        emailAdd: data.emailAdd,
+        userPass: data.userPass
+    }
+
+    // query
+    const query = `
+    INSERT INTO User
+    SET ?;
+    `
+    db.query (query,[data] ,(err) =>{
+        if (err) throw err// add a message instead
+       // creating jwt
+        res.cookie ()
+    })
+    let token = createToken()
+    res.cookie ("LegitUser", token,{
+       maxAge: 3600000,
+       httpOnly: true // available only on the browser
+    })
+    res.json ({
+        status: res.statusCode,
+        msg: "You are now registered"
+    })
     }
     updateUser (req, res){
         const query =`
