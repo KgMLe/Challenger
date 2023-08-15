@@ -4,6 +4,7 @@ const routes = express.Router ()
 // import all model's objects
 const {users} = require ('../model')
 const {orders} = require ('../model')
+const {books} = require ('../model')
 
 routes.get ('/users', (req,res)=>{
    users.fetchUsers(req, res)
@@ -51,23 +52,49 @@ routes.get ('/orders', (req,res)=>{
  routes.get ('/orders/orderbydate',  (req, res)=>{
      orders.orderDate(req, res)
  })
- 
- routes.put ('/order/:id', bodyParser.json(),
+ // update order
+ routes.put ('/orders/:id', bodyParser.json(),
  (req, res)=>{
      orders.updateOrder(req, res)
  })
  
- routes.patch ('/order/:id', bodyParser.json(),
+ routes.patch ('/orders/:id', bodyParser.json(),
  (req, res)=>{
      orders.updateOrder(req, res)
  })
-
- routes.delete ('/order/:id', (req, res)=>{
+// delete
+ routes.delete ('/orders/:id', (req, res)=>{
     orders.deleteOrder(req, res)
 })
 
 //books
 
+// select
+routes.get ('/books', (req,res)=>{
+    books.fetchBooks(req, res)
+ })
+ 
+ routes.get ('/books/:id', (req, res)=>{
+     books.select (req, res)
+ })
+ 
+ routes.get ('/books/orderbooks',  (req, res)=>{
+     books.orderBooks(req, res)
+ })
+ // update 
+ routes.put ('/books/:id', bodyParser.json(),
+ (req, res)=>{
+     books.updateBook(req, res)
+ })
+ 
+ routes.patch ('/books/:id', bodyParser.json(),
+ (req, res)=>{
+     books.updateBook(req, res)
+ })
+// delete
+ routes.delete ('/books/:id', (req, res)=>{
+    books.deleteBook(req, res)
+})
 
 module.exports = {
     express, routes

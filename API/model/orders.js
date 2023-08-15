@@ -1,4 +1,5 @@
 // import Orders
+const db = require ("../config") 
 class Orders{
 fetchOrders (req,res){
    const query = 
@@ -10,10 +11,10 @@ fetchOrders (req,res){
     (err, results)=>{
        if(err) throw err
        res.json ({
-           status: res.statusCode, // collects the status code from the server
+           status: res.statusCode,
            results
        })
-    } )
+    })
 }
 
 selectOrder (req,res){
@@ -70,7 +71,7 @@ updateOrder (req,res){
 deleteOrder (req, res){
     const query =`
     UPDATE FROM Orders
-    WHERE ordersID = ${req.params.id};
+    WHERE orderID = ${req.params.id};
     `
     db.query(query, (err)=>{
             if(err) throw err
@@ -80,6 +81,8 @@ deleteOrder (req, res){
             })
         })
 }
+
+
 }
 
 module.exports = Orders
