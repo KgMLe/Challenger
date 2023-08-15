@@ -33,7 +33,7 @@ selectOrder (req,res){
                     result
                 })
      })
-    }
+}
 
 orderDate(req,res){
     const query = `
