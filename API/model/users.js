@@ -34,40 +34,88 @@ class Users {
                 })
              } )
     }
-    login(req, res){
+
+    // login page 
+    login(req, res) {
+        const {emailAdd, userPass} = req.body
+        // query
         const query = `
+        SELECT firstName, lastName,
+        gender, userDOB, emailAdd, userPass,
+        profileUrl
+        FROM Users
+        WHERE emailAdd = ${emailAdd};
         `
+        db.query(query, async (err, result)=>{
+            if(err) throw err
+            if(!result?.length){
+                res.json({
+                    status: res.statusCode,
+                    msg: "You provided a wrong email."
+                })
+            }else {
+                await compare(userPass,
+                    result[0].userPass,
+                    (cErr, cResult)=>{
+                        if(cErr) throw cErr
+                        // Create a token
+                        const token =
+                        createToken({
+                            emailAdd,
+                            userPass
+                        })
+                        // Save a token
+                        res.cookie("LegitUser",
+                        token, {
+                            maxAge: 3600000,
+                            httpOnly: true
+                        })
+                        if(cResult) {
+                            res.json({
+                                msg: "Logged in",
+                                token,
+                                result: result[0]
+                            })
+                        }else {
+                            res.json({
+                                status: res.statusCode,
+                                msg:
+                                "Invalid password or you have not registered"
+                            })
+                        }
+                    })
+            }
+        })
     }
     
     async register(req, res){ // hash is an async because it returns a promise
         const data  = req.body // pipeline from the users data, we are getting users data
-    // encrypt password
-    data.userPass = await hash(data.userPass, 15)
-    //payload: Data coming from the user
-    const user = {
-        emailAdd: data.emailAdd,
-        userPass: data.userPass
-    }
+        // encrypt password
+        data.userPass = await hash(data.userPass, 15)
+        //payload: Data coming from the user
+        const user = {
+            emailAdd: data.emailAdd,
+            userPass: data.userPass
+        }
 
-    // query
-    const query = `
-    INSERT INTO User
-    SET ?;
-    `
-    db.query (query,[data] ,(err) =>{
-        if (err) throw err// add a message instead
-       // creating jwt
-        res.cookie ()
-    })
-    let token = createToken()
-    res.cookie ("LegitUser", token,{
-       maxAge: 3600000,
-       httpOnly: true // available only on the browser
-    })
-    res.json ({
-        status: res.statusCode,
-        msg: "You are now registered"
-    })
+        // query
+        const query = `
+        INSERT INTO User
+        SET ?;
+        `
+        db.query (query,[data] ,(err) =>{
+            if (err) throw err// add a message instead
+            // creating jwt
+            let token = createToken(user)
+            res.cookie ("LegitUser", token,{
+            maxAge: 3600000,
+            httpOnly: true // available only on the browser
+            })
+            res.json ({
+                status: res.statusCode,
+                msg: "You are now registered"
+            })
+        })
     }
     updateUser (req, res){
         const query =`

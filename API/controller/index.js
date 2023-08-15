@@ -34,3 +34,8 @@ routes.delete ('/user/:id', (req, res)=>{
 module.exports = {
     express, routes
 }
+
+routes.post('/login',
+bodyParser.json(), (req, res)=>{
+    users.login(req, res)
+})
