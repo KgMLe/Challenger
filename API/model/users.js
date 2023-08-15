@@ -17,6 +17,7 @@ class Users {
                 })
              } )
     }
+    
     fetchUser(req, res){
         const query =`
         SELECT userID, firstName, lastName, gender, userDOB,
