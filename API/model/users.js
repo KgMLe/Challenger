@@ -37,16 +37,16 @@ class Users {
 
     // login page 
     login(req, res) {
-        const {emailAdd, userPass} = req.body
+        const {emailAdd, userPass} = req.body // pipeline
         // query
         const query = `
         SELECT firstName, lastName,
         gender, userDOB, emailAdd, userPass,
         profileUrl
         FROM Users
-        WHERE emailAdd = ${emailAdd};
+        WHERE emailAdd = ?;
         `
-        db.query(query, async (err, result)=>{
+        db.query(query,[emailAdd,userPass], async (err, result)=>{
             if(err) throw err
             if(!result?.length){
                 res.json({
