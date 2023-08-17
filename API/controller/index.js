@@ -1,5 +1,7 @@
 const express = require ('express')
 const bodyParser = require ('body-parser')
+const {verifyAToken} =
+require ('../middleware/AuthenticateUser')
 const routes = express.Router ()
 // import all model's objects
 const {users} = require ('../model')
@@ -7,6 +9,7 @@ const {orders} = require ('../model')
 const {books} = require ('../model')
 const {authors} = require ('../model')
 
+// User routes
 routes.get ('/users', (req,res)=>{
    users.fetchUsers(req, res)
 })
@@ -71,7 +74,7 @@ routes.get ('/orders', (req,res)=>{
 //books
 
 // select
-routes.get ('/books', (req,res)=>{
+routes.get ('/books', verifyAToken, (req,res)=>{
     books.fetchBooks(req, res)
  })
  
