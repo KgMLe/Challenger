@@ -17,6 +17,8 @@ class Books{
             })
      }
 
+    //  include an add book method
+
      fetchBook(req, res){
         const query =`
         SELECT bookId, bookTitle, category, bookURL 

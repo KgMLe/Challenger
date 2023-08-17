@@ -33,7 +33,8 @@ selectOrder (req,res){
                     result
                 })
      })
-    }
+}
+// add Order
 
 orderDate(req,res){
     const query = `
@@ -81,7 +82,6 @@ deleteOrder (req, res){
             })
         })
 }
-
 
 }
 

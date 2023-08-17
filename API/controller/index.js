@@ -1,11 +1,15 @@
 const express = require ('express')
 const bodyParser = require ('body-parser')
+const {verifyAToken} =
+require ('../middleware/AuthenticateUser')
 const routes = express.Router ()
 // import all model's objects
 const {users} = require ('../model')
 const {orders} = require ('../model')
 const {books} = require ('../model')
+const {authors} = require ('../model')
 
+// User routes
 routes.get ('/users', (req,res)=>{
    users.fetchUsers(req, res)
 })
@@ -70,14 +74,14 @@ routes.get ('/orders', (req,res)=>{
 //books
 
 // select
-routes.get ('/books', (req,res)=>{
+routes.get ('/books', verifyAToken, (req,res)=>{
     books.fetchBooks(req, res)
  })
  
  routes.get ('/books/:id', (req, res)=>{
      books.select (req, res)
  })
- 
+ //order books
  routes.get ('/books/orderbooks',  (req, res)=>{
      books.orderBooks(req, res)
  })
@@ -96,6 +100,38 @@ routes.get ('/books', (req,res)=>{
     books.deleteBook(req, res)
 })
 
+// _________________________________________
+// book authors
+
+// select
+routes.get ('/authors', (req,res)=>{
+    authors.fetchAuthors(req, res)
+ })
+ 
+ routes.get ('/authors/:id', (req, res)=>{
+     authors.select (req, res)
+ })
+ //order by category
+ routes.get ('/authors/category',  (req, res)=>{
+     authors.authorCat(req, res)
+ })
+ // update 
+ routes.put ('/authors/:id', bodyParser.json(),
+ (req, res)=>{
+     authors.updateAuthor(req, res)
+ })
+ 
+ routes.patch ('/authors/:id', bodyParser.json(),
+ (req, res)=>{
+     authors.updateAuthor(req, res)
+ })
+// delete
+ routes.delete ('/authors/:id', (req, res)=>{
+    authors.deleteAuthor(req, res)
+})
+
 module.exports = {
     express, routes
 }
+
+
