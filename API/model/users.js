@@ -66,11 +66,11 @@ class Users {
                             userPass
                         })
                         // Save a token
-                        res.cookie("LegitUser",
-                        token, {
-                            maxAge: 3600000,
-                            httpOnly: true
-                        })
+                        // res.cookie("LegitUser",
+                        // token, {
+                        //     maxAge: 3600000,
+                        //     httpOnly: true
+                        // })
                         if(cResult) {
                             res.json({
                                 msg: "Logged in",
@@ -106,7 +106,7 @@ class Users {
         `
         db.query (query,[data] ,(err) =>{
             if (err) throw err// add a message instead
-            // creating jwt
+            // creating jwt/ token
             let token = createToken(user)
             res.cookie ("LegitUser", token,{
             maxAge: 3600000,
@@ -114,6 +114,7 @@ class Users {
             })
             res.json ({
                 status: res.statusCode,
+                token,
                 msg: "You are now registered"
             })
         })
